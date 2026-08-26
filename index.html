@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f766e"><title>JAMES WORKFLOW</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">JAMES <span>WORKFLOW</span></div>
+    <p class="brand-sub">SU / NSU productivity</p>
+    <nav id="nav"><button class="active" data-page="dashboard">▦ Dashboard</button><button data-page="entry">＋ Daily Entry</button><button data-page="records">☷ Records</button><button data-page="reports">▥ Reports</button><button data-page="analyzer">⌕ DL Analyzer</button><button data-page="settings">⚙ Settings</button><button data-page="data">⇅ Data Management</button></nav>
+    <div class="sidebar-foot"><button id="themeBtn">◐ Theme</button><small>Static • Private • Local</small></div>
+  </aside>
+  <main>
+    <header><div><p class="eyebrow" id="pageEyebrow">PRODUCTIVITY COMMAND CENTER</p><h1 id="pageTitle">JAMES WORKFLOW</h1></div><div class="header-actions"><label>Report month <input id="monthPicker" type="month"></label><button class="secondary" id="printBtn">Print Report</button></div></header>
+
+    <section class="page active" id="dashboard">
+      <div class="section-head">
+        <div>
+          <h2>Dashboard</h2>
+          <p>Month-to-date performance, calculated from your saved daily records.</p>
+        </div>
+      </div>
+      <div id="dashboardBlocks" class="dashboard-blocks"></div>
+      <section class="summary-band" id="achievementBand"></section>
+      <div class="chart-grid">
+        <article class="panel chart">
+        <h3>Daily UT%</h3>
+        <canvas id="utChart"></canvas>
+        </article>
+        <article class="panel chart">
+          <h3>Daily Productivity%</h3>
+          <canvas id="prodChart"></canvas>
+        </article>
+        <article class="panel chart">
+          <h3>SU vs NSU</h3>
+          <canvas id="volumeChart"></canvas>
+        </article>
+        <article class="panel chart">
+          <h3>Target URLs vs Completed</h3>
+          <canvas id="targetChart"></canvas>
+        </article>
+        <article class="panel chart">
+          <h3>Deficit trend</h3>
+          <canvas id="deficitChart"></canvas>
+        </article>
+        <article class="panel chart">
+          <h3>Daily Exception Minutes</h3>
+          <canvas id="exceptionChart"></canvas>
+        </article>
+        <article class="panel chart"><h3>Monthly Cumulative Productivity</h3><canvas id="cumulativeProdChart"></canvas></article>
+        <article class="panel chart"><h3>Monthly Cumulative URLs</h3><canvas id="cumulativeUrlsChart"></canvas></article>
+      </div>
+    </section>
+
+    <section class="page" id="entry">
+      <div class="section-head">
+        <div>
+          <h2>Daily Entry</h2>
+          <p>Preview updates as you type. Save adds a new date or updates an existing date.</p>
+        </div>
+        <div>
+          <button class="secondary" id="resetForm">Reset Current Form</button>
+          <button id="saveDay">Save Day</button>
+        </div>
+      </div>
+      <div class="entry-layout">
+        <form id="entryForm" class="panel form-grid" novalidate>
+        <label>Date <input id="date" type="date" required></label>
+          <label>SU <input id="su" type="number" min="0" step="1" inputmode="decimal" placeholder="0"></label>
+          <label>NSU <input id="nsu" type="number" min="0" step="1" inputmode="decimal" placeholder="0"></label>
+          <label>UT % <input id="ut" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0"></label>
+          <label>UT Deficit <input id="utDeficitInput" type="number" min="0" step="0.01" placeholder="Auto" readonly></label>
+          <label>UT Exception Minutes <input id="utException" type="number" min="0" step="1" inputmode="decimal" placeholder="0"></label>
+          <label>Productivity Exception Minutes <input id="prodException" type="number" min="0" step="1" inputmode="decimal" placeholder="0"></label>
+      </form>
+        <aside class="panel live-preview">
+          <h3>Live calculation</h3>
+          <div id="preview"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page" id="records">
+      <div class="section-head">
+        <div>
+        <h2>Daily Records</h2>
+        <p>Same-date saves update the original record.</p>
+      </div>
+      </div>
+      <div class="toolbar panel">
+        <input id="searchRecords" type="search" placeholder="Search by date (YYYY-MM-DD)">
+        <select id="recordFilter">
+          <option value="all">All records</option>
+          <option value="utBelow">UT below 85%</option>
+          <option value="utAchieved">UT achieved</option>
+          <option value="prodBelow">Productivity below 110%</option>
+          <option value="prodAchieved">Productivity achieved</option>
+          <option value="exceptions">Has exceptions</option>
+        </select>
+        <span id="recordCount"></span>
+      </div>
+      <div class="table-wrap panel">
+        <table id="recordsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Days</th>
+              <th>SU</th>
+              <th>NSU</th>
+              <th>Total</th>
+              <th>SU%</th>
+              <th>NSU%</th>
+              <th>Target URLs</th>
+              <th>Deficit URLs</th>
+              <th>UT%</th>
+              <th>UT Deficit</th>
+              <th>Productivity @540</th>
+              <th>Productivity @472.5</th>
+              <th>Exception</th>
+              <th>UT Exception</th>
+              <th>UT Exception Hours</th>
+              <th>Productivity Exception</th>
+              <th>Productivity Exception Hours</th>
+              <th>New UT</th><th>New Productivity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+          <tfoot id="recordsSummary"></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="reports"><div class="section-head"><div><h2>Monthly Report</h2><p id="reportPeriod"></p></div><div><button id="pdfBtn">Export PDF</button></div></div><div id="monthlyReport"></div><section class="panel report-summary"><h3>CUMULATIVE SUMMARY</h3><div id="reportSummary"></div></section><div class="chart-grid report-charts"><article class="panel chart"><h3>SU% vs NSU%</h3><canvas id="mixPie"></canvas></article><article class="panel chart"><h3>Completed URLs vs Remaining Target URLs</h3><canvas id="urlPie"></canvas></article><article class="panel chart"><h3>Exception distribution</h3><canvas id="exceptionPie"></canvas></article></div></section>
+
+    <section class="page" id="analyzer">
+      <div class="section-head"><div><h2>DL ANALYZER</h2><p>Live, non-destructive Description Line quality checking.</p></div></div>
+      <div class="analyzer-layout"><article class="panel analyzer-input"><label>Description Line<textarea id="dlText" maxlength="1000" placeholder="Paste a Description Line here…"></textarea></label><div class="dl-count" id="dlCount"></div><div class="dl-settings form-grid"><label>Highlight Keywords<input id="dlKeywords" placeholder="comma or new-line separated"></label><label>Specific Words To Check<input id="dlSpecific" placeholder="comma or new-line separated"></label><label>Do Not Change Words<input id="dlNoChange" placeholder="preserve capitalization"></label><label>Capitalization Exceptions<input id="dlCapExceptions" placeholder="never flag or change"></label></div><button id="saveDlSettings" class="secondary">Save Analyzer Settings</button></article><aside class="panel dl-summary"><h3>CHECK SUMMARY</h3><div id="dlSummary"></div></aside></div>
+      <article class="panel"><h3>Live highlighted preview</h3><div class="dl-preview" id="dlPreview" aria-live="polite"></div><div id="dlIssues" class="dl-issues"></div></article>
+      <div class="dl-output-grid"><article class="panel"><h3>DL1 <span id="dl1Count"></span></h3><div id="dl1" class="dl-output"></div><button data-copy="dl1">Copy DL1</button></article><article class="panel"><h3>DL2 <span id="dl2Count"></span></h3><div id="dl2" class="dl-output"></div><button data-copy="dl2">Copy DL2</button></article><article class="panel"><h3>Original DL <span id="fullDlCount"></span></h3><div id="dlOriginal" class="dl-output"></div><button data-copy="original">Copy Original DL</button></article></div>
+    </section>
+
+    <section class="page" id="settings"><div class="section-head"><div><h2>Settings</h2><p>All calculation settings stay editable here.</p></div><button id="saveSettings">Save Settings</button></div><div class="settings-layout"><form id="settingsForm" class="panel form-grid"><label>SU AHT <input name="suAht" type="number" min="0" step="0.01"></label><label>NSU AHT <input name="nsuAht" type="number" min="0" step="0.01"></label><label>Available Minutes <input name="availableMinutes" type="number" min="1" step="0.01"></label><label>Productivity Denominator <input name="productivityDenominator" type="number" min="1" step="0.01"></label><label>Productivity Target % <input name="productivityTarget" type="number" min="0" step="0.01"></label><label>Daily UT Minimum % <input name="utMinimum" type="number" min="0" step="0.01"></label><label>Storage <select name="storageMode"><option value="localStorage">LocalStorage</option><option value="indexedDB">IndexedDB (fallback to LocalStorage)</option></select></label></form><article class="panel"><h3>Working days</h3><p class="muted">Set the normal weekly schedule; holidays and leave dates below override it.</p><div id="weekdayConfig" class="weekdays"></div><hr><label>Holiday / leave / weekoff date <input id="holidayDate" type="date"></label><button id="addHoliday" class="secondary">Add excluded date</button><div id="holidayList" class="chips"></div></article></div></section>
+
+    <section class="page" id="data"><div class="section-head"><div><h2>Data Management</h2><p>Exports are generated entirely in your browser.</p></div></div><div class="data-actions"><article class="panel"><h3>Backup & restore</h3><p>JSON includes records, settings, holidays and the working-day configuration.</p><button id="exportJson">Export JSON Backup</button><label class="file-button">Import JSON Backup<input id="importJson" type="file" accept="application/json"></label></article><article class="panel"><h3>Reports</h3><p>CSV opens in Excel and includes daily columns plus summary data.</p><button id="exportCsv">Export CSV / Excel</button><button id="dataPrint" class="secondary">Print Report</button></article><article class="panel danger"><h3>Clear data</h3><p>Removes all saved daily records and excluded dates. Settings are retained.</p><button id="clearData">Clear All Data</button></article></div></section>
+  </main>
+</div><div id="toast" role="status"></div><script src="app.js"></script>
+</body></html>
