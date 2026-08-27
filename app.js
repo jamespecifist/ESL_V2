@@ -43,7 +43,7 @@
     const effective540=Math.max(1,s.availableMinutes-prodEx), 
       effective472=Math.max(1,s.productivityDenominator-prodEx), 
       prod540=weighted/effective540*100, 
-      productivity=weighted/effective472*100;
+      productivity=effective472/weighted*100;
     // Excel equivalent: IFERROR(472.5 / (SU% * 3.5 + NSU% * 1.5), "0").
     // These percentage shares stay decimal internally: 50% is 0.50.
     const suPct=total>0 ? su/total : 0,
