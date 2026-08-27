@@ -76,7 +76,7 @@
     <span>Productivity @472.5</span><b class="${classFor(r.productivity,state.settings.productivityTarget)}">${pct(r.productivity)}</b>
     <span>Exceptions</span><b>${minutes(r.exception)} min / ${hours(r.exception)} h</b>
     <span>New UT / Productivity</span><b>${pct(r.newUT||0)} / ${pct(r.newProductivity||0)}</b>
-    <span>Target @472.5</span><b>${r.prod540}</b>
+    <span>Target @472.5</span><b>${pct(r.prod540)}</b>
     </div>`
   }
   // Preview Ending
