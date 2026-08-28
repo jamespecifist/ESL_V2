@@ -42,8 +42,10 @@
     // Productivity = weighted work minutes ÷ available minutes × 100. Exception minutes reduce available time.
     const effective540=Math.max(1,s.availableMinutes-prodEx), 
       effective472=Math.max(1,s.productivityDenominator-prodEx), 
-      prod540=weighted/effective540*100, 
+      prod540=weighted/effective540*100,
+      rem_deficit_540 = 100 - prod540,
       productivity=weighted/effective472*100;
+    rem_deficit_472 = 100-productivity,
     // Excel equivalent: IFERROR(472.5 / (SU% * 3.5 + NSU% * 1.5), "0").
     // These percentage shares stay decimal internally: 50% is 0.50.
     const suPct=total>0 ? su/total : 0,
@@ -53,7 +55,7 @@
       deficitUrls=targetUrls-total,
       utDeficit=Math.max(0,s.utMinimum-ut), 
       prodDeficit=Math.max(0,s.productivityTarget-productivity);
-    return{date:raw.date||'',su,nsu,ut,utException:utEx,prodException:prodEx,total,weighted,suPct:suPct*100,nsuPct:nsuPct*100,targetUrls,deficitUrls,utDeficit,prod540,productivity,prodDeficit,exception,utExceptionHours:hours(utEx),prodExceptionHours:hours(prodEx),exceptionHours:hours(exception)};
+    return{date:raw.date||'',su,nsu,ut,utException:utEx,prodException:prodEx,total,weighted,suPct:suPct*100,nsuPct:nsuPct*100,targetUrls,deficitUrls,utDeficit,prod540,productivity,rem_deficit_540,rem_deficit_472,prodDeficit,exception,utExceptionHours:hours(utEx),prodExceptionHours:hours(prodEx),exceptionHours:hours(exception)};
   }
   function monthRecords(){const m=$('#monthPicker').value;return state.records.filter(r=>r.date.startsWith(m)).sort((a,b)=>a.date.localeCompare(b))}
   // REQUIRED PERFORMANCE: (target average × working days − achieved total) ÷ remaining working days.
@@ -73,10 +75,11 @@
     <span>Deficit URLs</span><b class="${r.deficitUrls<0?'metric-good':'metric-bad'}">${round(r.deficitUrls)}</b>
     <span>UT / deficit</span><b class="${classFor(r.ut,state.settings.utMinimum)}">${pct(r.ut)} / ${pct(r.utDeficit)}</b>
     <span>Productivity @540</span><b class="${classFor(r.prod540,state.settings.productivityTarget)}">${pct(r.prod540)}</b>
+    <span>Defict(540)</span><b>${pct(r.rem_deficit_540)}</b>
     <span>Productivity @472.5</span><b class="${classFor(r.productivity,state.settings.productivityTarget)}">${pct(r.productivity)}</b>
+    <span>Deficit(472.50)</span><b>${pct(r.rem_deficit_472)}</b>
     <span>Exceptions</span><b>${minutes(r.exception)} min / ${hours(r.exception)} h</b>
     <span>New UT / Productivity</span><b>${pct(r.newUT||0)} / ${pct(r.newProductivity||0)}</b>
-    <span>Target @472.5</span><b>${pct(r.prod540)}</b>
     </div>`
   }
   // Preview Ending
