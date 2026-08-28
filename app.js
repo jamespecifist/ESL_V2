@@ -43,9 +43,9 @@
     const effective540=Math.max(1,s.availableMinutes-prodEx), 
       effective472=Math.max(1,s.productivityDenominator-prodEx), 
       prod540=weighted/effective540*100,
-      rem_deficit_540 = 100 - prod540,
+      
       productivity=weighted/effective472*100;
-    rem_deficit_472 = 100-productivity,
+    
     // Excel equivalent: IFERROR(472.5 / (SU% * 3.5 + NSU% * 1.5), "0").
     // These percentage shares stay decimal internally: 50% is 0.50.
     const suPct=total>0 ? su/total : 0,
@@ -55,6 +55,7 @@
       deficitUrls=targetUrls-total,
       utDeficit=Math.max(0,s.utMinimum-ut), 
       prodDeficit=Math.max(0,s.productivityTarget-productivity);
+    const rem_deficit_540 = 100 - prod540, rem_deficit_472 = 100-productivity;
     return{date:raw.date||'',su,nsu,ut,utException:utEx,prodException:prodEx,total,weighted,suPct:suPct*100,nsuPct:nsuPct*100,targetUrls,deficitUrls,utDeficit,prod540,productivity,rem_deficit_540,rem_deficit_472,prodDeficit,exception,utExceptionHours:hours(utEx),prodExceptionHours:hours(prodEx),exceptionHours:hours(exception)};
   }
   function monthRecords(){const m=$('#monthPicker').value;return state.records.filter(r=>r.date.startsWith(m)).sort((a,b)=>a.date.localeCompare(b))}
